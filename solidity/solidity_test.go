@@ -7,10 +7,10 @@ import (
 	"testing"
 
 	"github.com/consensys/gnark-crypto/ecc"
-	"github.com/consensys/gnark/backend"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/examples/cubic"
 	"github.com/consensys/gnark/frontend"
+	"github.com/consensys/gnark/frontend/cs/r1cs"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/common"
@@ -41,13 +41,15 @@ func TestRunExportSolidityTestSuite(t *testing.T) {
 
 func (t *ExportSolidityTestSuite) SetupTest() {
 
-	const gasLimit uint64 = 8000029
+	const gasLimit uint64 = 4712388
 
 	// setup simulated backend
 	key, _ := crypto.GenerateKey()
-	auth := bind.NewKeyedTransactor(key)
+	auth, err := bind.NewKeyedTransactorWithChainID(key, big.NewInt(1337))
+	t.NoError(err, "init keyed transactor")
+
 	genesis := map[common.Address]core.GenesisAccount{
-		auth.From: {Balance: big.NewInt(10000000000)},
+		auth.From: {Balance: big.NewInt(1000000000000000000)}, // 1 Eth
 	}
 	t.backend = backends.NewSimulatedBackend(genesis, gasLimit)
 
@@ -57,7 +59,7 @@ func (t *ExportSolidityTestSuite) SetupTest() {
 	t.verifierContract = v
 	t.backend.Commit()
 
-	t.r1cs, err = frontend.Compile(ecc.BN254, backend.GROTH16, &t.circuit)
+	t.r1cs, err = frontend.Compile(ecc.BN254, r1cs.NewBuilder, &t.circuit)
 	t.NoError(err, "compiling R1CS failed")
 
 	// read proving and verifying keys
@@ -81,14 +83,21 @@ func (t *ExportSolidityTestSuite) SetupTest() {
 func (t *ExportSolidityTestSuite) TestVerifyProof() {
 
 	// create a valid proof
-	var witness cubic.Circuit
-	witness.X.Assign(3)
-	witness.Y.Assign(35)
-	proof, err := groth16.Prove(t.r1cs, t.pk, &witness)
+	var assignment cubic.Circuit
+	assignment.X = 3
+	assignment.Y = 35
+
+	// witness creation
+	witness, err := frontend.NewWitness(&assignment, ecc.BN254)
+	t.NoError(err, "witness creation failed")
+
+	// prove
+	proof, err := groth16.Prove(t.r1cs, t.pk, witness)
 	t.NoError(err, "proving failed")
 
 	// ensure gnark (Go) code verifies it
-	err = groth16.Verify(proof, t.vk, &witness)
+	publicWitness, _ := witness.Public()
+	err = groth16.Verify(proof, t.vk, publicWitness)
 	t.NoError(err, "verifying failed")
 
 	// get proof bytes

@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"github.com/consensys/gnark-crypto/ecc"
-	"github.com/consensys/gnark/backend"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/examples/cubic"
 	"github.com/consensys/gnark/frontend"
+	"github.com/consensys/gnark/frontend/cs/r1cs"
 )
 
 // run this from /integration/solidity to regenerate files
@@ -16,7 +16,7 @@ import (
 func main() {
 	var circuit cubic.Circuit
 
-	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &circuit)
+	r1cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &circuit)
 	if err != nil {
 		panic(err)
 	}
