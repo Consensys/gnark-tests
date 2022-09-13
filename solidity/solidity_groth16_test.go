@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type ExportSolidityTestSuite struct {
+type ExportSolidityTestSuiteGroth16 struct {
 	suite.Suite
 
 	// backend
@@ -35,11 +35,11 @@ type ExportSolidityTestSuite struct {
 	r1cs    frontend.CompiledConstraintSystem
 }
 
-func TestRunExportSolidityTestSuite(t *testing.T) {
-	suite.Run(t, new(ExportSolidityTestSuite))
+func TestRunExportSolidityTestSuiteGroth16(t *testing.T) {
+	suite.Run(t, new(ExportSolidityTestSuiteGroth16))
 }
 
-func (t *ExportSolidityTestSuite) SetupTest() {
+func (t *ExportSolidityTestSuiteGroth16) SetupTest() {
 
 	const gasLimit uint64 = 4712388
 
@@ -59,20 +59,20 @@ func (t *ExportSolidityTestSuite) SetupTest() {
 	t.verifierContract = v
 	t.backend.Commit()
 
-	t.r1cs, err = frontend.Compile(ecc.BN254, r1cs.NewBuilder, &t.circuit)
+	t.r1cs, err = frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &t.circuit)
 	t.NoError(err, "compiling R1CS failed")
 
 	// read proving and verifying keys
 	t.pk = groth16.NewProvingKey(ecc.BN254)
 	{
-		f, _ := os.Open("cubic.pk")
+		f, _ := os.Open("cubic.g16.pk")
 		_, err = t.pk.ReadFrom(f)
 		f.Close()
 		t.NoError(err, "reading proving key failed")
 	}
 	t.vk = groth16.NewVerifyingKey(ecc.BN254)
 	{
-		f, _ := os.Open("cubic.vk")
+		f, _ := os.Open("cubic.g16.vk")
 		_, err = t.vk.ReadFrom(f)
 		f.Close()
 		t.NoError(err, "reading verifying key failed")
@@ -80,7 +80,7 @@ func (t *ExportSolidityTestSuite) SetupTest() {
 
 }
 
-func (t *ExportSolidityTestSuite) TestVerifyProof() {
+func (t *ExportSolidityTestSuiteGroth16) TestVerifyProof() {
 
 	// create a valid proof
 	var assignment cubic.Circuit
@@ -88,7 +88,7 @@ func (t *ExportSolidityTestSuite) TestVerifyProof() {
 	assignment.Y = 35
 
 	// witness creation
-	witness, err := frontend.NewWitness(&assignment, ecc.BN254)
+	witness, err := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
 	t.NoError(err, "witness creation failed")
 
 	// prove
