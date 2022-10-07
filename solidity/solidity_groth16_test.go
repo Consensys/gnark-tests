@@ -129,14 +129,16 @@ func (t *ExportSolidityTestSuiteGroth16) TestVerifyProof() {
 
 	// call the contract
 	res, err := t.verifierContract.VerifyProof(nil, a, b, c, input)
-	t.NoError(err, "calling verifier on chain gave error")
-	t.True(res, "calling verifier on chain didn't succeed")
+	if t.NoError(err, "calling verifier on chain gave error") {
+		t.True(res, "calling verifier on chain didn't succeed")
+	}
 
 	// (wrong) public witness
 	input[0] = new(big.Int).SetUint64(42)
 
 	// call the contract should fail
 	res, err = t.verifierContract.VerifyProof(nil, a, b, c, input)
-	t.NoError(err, "calling verifier on chain gave error")
-	t.False(res, "calling verifier on chain succeed, and shouldn't have")
+	if t.NoError(err, "calling verifier on chain gave error") {
+		t.False(res, "calling verifier on chain succeed, and shouldn't have")
+	}
 }

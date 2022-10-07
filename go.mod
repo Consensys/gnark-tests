@@ -3,7 +3,7 @@ module github.com/consensys/gnark-tests
 go 1.19
 
 require (
-	github.com/consensys/gnark v0.7.2-0.20220913162805-afcd6f809096
+	github.com/consensys/gnark v0.7.2-0.20221007152330-020b2d67e570
 	github.com/consensys/gnark-crypto v0.8.0
 	github.com/ethereum/go-ethereum v1.10.23
 	github.com/kilic/bls12-381 v0.1.0
