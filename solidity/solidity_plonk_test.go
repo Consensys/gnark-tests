@@ -10,6 +10,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/kzg"
 	"github.com/consensys/gnark/backend/plonk"
+	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/examples/cubic"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/scs"
@@ -35,7 +36,7 @@ type ExportSolidityTestSuitePlonk struct {
 	vk      plonk.VerifyingKey
 	pk      plonk.ProvingKey
 	circuit cubic.Circuit
-	scs     frontend.CompiledConstraintSystem
+	scs     constraint.ConstraintSystem
 }
 
 func TestRunExportSolidityTestSuitePlonk(t *testing.T) {

@@ -3,9 +3,9 @@ module github.com/consensys/gnark-tests
 go 1.19
 
 require (
-	github.com/consensys/gnark v0.7.2-0.20221007152330-020b2d67e570
-	github.com/consensys/gnark-crypto v0.8.0
-	github.com/ethereum/go-ethereum v1.10.23
+	github.com/consensys/gnark v0.7.2-0.20230119200659-2f5d634e0ec0
+	github.com/consensys/gnark-crypto v0.9.0
+	github.com/ethereum/go-ethereum v1.10.26
 	github.com/kilic/bls12-381 v0.1.0
 	github.com/leanovate/gopter v0.2.9
 	github.com/stretchr/testify v1.8.0
@@ -51,7 +51,7 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/sys v0.0.0-20220913120320-3275c407cedc // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	rsc.io/tmplfunc v0.0.3 // indirect
