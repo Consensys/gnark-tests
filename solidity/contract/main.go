@@ -84,16 +84,6 @@ func generatePlonk() error {
 	if err != nil {
 		return err
 	}
-	{
-		f, err := os.Create("kzg.plonk.srs")
-		if err != nil {
-			return err
-		}
-		_, err = srs.WriteTo(f)
-		if err != nil {
-			return err
-		}
-	}
 
 	pk, vk, err := plonk.Setup(scs, srs)
 	if err != nil {
