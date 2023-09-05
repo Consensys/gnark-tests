@@ -1,5 +1,8 @@
 # gnark-tests
 
+** UNUSED / archived **, superseded by https://github.com/ConsenSys/gnark-solidity-checker and CI tests in gnark directly. 
+
+
 This repo contains tests (interop or integration) that may drag some extra dependencies, for the following projects:
 
 * [`gnark`: a framework to execute (and verify) algorithms in zero-knowledge](https://github.com/consensys/gnark) 
